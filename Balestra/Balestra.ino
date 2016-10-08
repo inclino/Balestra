@@ -1,9 +1,33 @@
 #include "FastLED.h"
 
+// Movement definitions
+#define ADVANCE 0
+#define RETREAT 1
+#define LUNGE 2
+#define ADVANCE_LUNGE 3
+#define FLECHE 4
 
+// Set definitions for LED strip
 #define NUM_LEDS 60
 #define DATA_PIN 3
 CRGB leds[NUM_LEDS];
+
+void move(int moveType, int speed, int start) {
+  switch(moveType) {
+    case ADVANCE:
+      break;
+    case RETREAT:
+      break;
+    case LUNGE:
+      break;
+    case ADVANCE_LUNGE:
+      break;
+    case FLECHE:
+      break;
+    default:
+      break;
+  }
+}
 
 void setup() {
   delay(2000);
