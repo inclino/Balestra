@@ -39,6 +39,7 @@ int movementStart = 0;
 CRGB leds[NUM_LEDS];
 
 // Set definitions for keypad
+#define LEDPIN 13
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //three columns
 char keys[ROWS][COLS] = {
@@ -172,65 +173,66 @@ void move (int moveType, int speed, int startLed) {
 }
 
 void keypadEvent(KeypadEvent key){
-  switch (keypad.getState()) {
-    case PRESSED:      
-      switch(key){
-        case 'A':
-        mode = SETUP;
-        break;
-      case 'B':
-        mode = SHUTTLE;
-        break;
-      case 'C':
-        mode = SIMPLE_SLOW;
-        break;
-      case 'D':
-        mode = SIMPLE_QUICK;
-        break;
-      case '1':
-        mode = RANDOM_10P;
-        break;
-      case '2':
-        mode = RANDOM_20P;
-        break;
-      case '3':
-        mode = RANDOM_30P;
-        break;
-      case '4':
-        mode = RANDOM_40P;
-        break;
-      case '5':
-        mode = RANDOM_50P;
-        break;
-      case '6':
-        mode = RANDOM_60P;
-        break;
-      case '7':
-        mode = RANDOM_70P;
-        break;
-      case '8':
-        mode = RANDOM_80P;
-        break;
-      case '9':
-        mode = RANDOM_90P;
-        break;
-      case '0':
-        mode = RANDOM_100P;
-        break;
-      case '*':
-        mode = TRAINING_LOOP_3A_3R;
-        break;
-      case '#':
-        mode = TRAINING_LOOP_L_R;
-        break;
-      default:
-        break;
-      }
+  digitalWrite(LEDPIN,!digitalRead(LEDPIN)); 
+  
+  switch (key) {
+    case 'A':
+      mode = SETUP;
+      break;
+    case 'B':
+      mode = SHUTTLE;
+      break;
+    case 'C':
+      mode = SIMPLE_SLOW;
+      break;
+    case 'D':
+      mode = SIMPLE_QUICK;
+      break;
+    case '1':
+      mode = RANDOM_10P;
+      break;
+    case '2':
+      mode = RANDOM_20P;
+      break;
+    case '3':
+      mode = RANDOM_30P;
+      break;
+    case '4':
+      mode = RANDOM_40P;
+      break;
+    case '5':
+      mode = RANDOM_50P;
+      break;
+    case '6':
+      mode = RANDOM_60P;
+      break;
+    case '7':
+      mode = RANDOM_70P;
+      break;
+    case '8':
+      mode = RANDOM_80P;
+      break;
+    case '9':
+      mode = RANDOM_90P;
+      break;
+    case '0':
+      mode = RANDOM_100P;
+      break;
+    case '*':
+      mode = TRAINING_LOOP_3A_3R;
+      break;
+    case '#':
+      mode = TRAINING_LOOP_L_R;
+      break;
+    default:
       break;
   }
 }
 
 void setup() {
+  pinMode(LEDPIN, OUTPUT);              // Sets the digital pin as output.
+  digitalWrite(LEDPIN, HIGH);           // Turn the LED on.
+  
   delay(2000);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(255);
