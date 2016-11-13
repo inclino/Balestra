@@ -2,30 +2,44 @@
 #include <Keypad.h>
 
 // Mode definitions
-#define SETUP 0
-#define SHUTTLE 1
-#define SIMPLE_SLOW 2
-#define SIMPLE_QUICK 3
-#define RANDOM_SLOW 4
-#define RANDOM_QUICK 5
+#define SETUP 1
+#define SHUTTLE 2
+#define SIMPLE_SLOW 3
+#define SIMPLE_QUICK 4
+#define RANDOM_10P 5
+#define RANDOM_20P 6
+#define RANDOM_30P 7
+#define RANDOM_40P 8
+#define RANDOM_50P 9
+#define RANDOM_60P 10
+#define RANDOM_70P 11
+#define RANDOM_80P 12
+#define RANDOM_90P 13
+#define RANDOM_100P 14
+#define TRAINING_LOOP_3A_3R 15
+#define TRAINING_LOOP_L_R 16
 int mode = SETUP;
 
 // Movement definitions
-#define ADVANCE 0
-#define RETREAT 1
-#define LUNGE 2
-#define ADVANCE_LUNGE 3
-#define FLECHE 4
+#define HOLDING 0
+#define ADVANCE 1
+#define RETREAT 2
+#define LUNGE_ENEMY 3
+#define LUNGE 4
+#define ADVANCE_LUNGE 5
+#define FLECHE 6
+byte movement = HOLDING;
+int movementStart = 0;
 
 // Set definitions for LED strip
-#define NUM_LEDS 110
+#define NUM_LEDS 115
 #define NUM_LEDS_PER_METER 30
+#define REVERSE_MODE 1
 #define DATA_PIN 6
 CRGB leds[NUM_LEDS];
 
-// Define keypad
-#include <Keypad.h>
-
+// Set definitions for keypad
+#define LEDPIN 13
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //three columns
 char keys[ROWS][COLS] = {
@@ -45,6 +59,7 @@ void clear () {
   FastLED.show();
 }
 
+/* Show position */
 void position ( int x, int r ) {
   // Fix over- and underflow
   if ( x - r < -1 ) {
@@ -57,6 +72,10 @@ void position ( int x, int r ) {
     r = 1;
   }
 
+#ifdef REVERSE_MODE
+  x = map(x, 0, NUM_LEDS, NUM_LEDS, 0);
+#endif 
+
   
   leds[x] = CRGB::Blue;
   for ( int i = 1; i <= r; i++ ) {
@@ -64,12 +83,97 @@ void position ( int x, int r ) {
     leds[x+i] = CRGB( 255*(r-i)/r, 0, 0);
   }
   FastLED.show();
-  FastLED.delay(5);
 }
 
-void setMode(){
-  char key = keypad.getKey();
-  switch(key) {
+/* Simulate movement */
+void move (int moveType, int speed, int startLed) {
+  // Initialize ending led variable
+  int endLed = startLed;
+  if ( startLed > (NUM_LEDS - 50) ) { moveType = RETREAT; }
+  if ( startLed < 50 ) { moveType = ADVANCE; }
+  
+  // Set all leds to black
+  clear();
+
+  // Initialize speed recalculation (percentages to delays)
+  if(speed < 10) { speed = 10; }
+  int delayTime = map(speed, 10, 100, 1000, 25);
+  
+  // Start moving
+  switch(moveType) {
+    case HOLDING:
+      position(startLed, 2);
+      FastLED.delay(delayTime);
+      movementStart = startLed;
+      break;
+    case ADVANCE:
+      position(startLed, 2);
+      FastLED.delay(delayTime);
+      for(byte i = 1; i < 10; i++) {
+        clear();
+        position(startLed + i, 2);
+        FastLED.delay(5);
+      }
+      FastLED.delay(delayTime);
+      endLed = startLed + 10;
+      movementStart = endLed;
+      break;
+    case RETREAT:
+      position(startLed, 2);
+      FastLED.delay(delayTime);
+      for(byte i = 1; i < 10; i++) {
+        clear();
+        position(startLed - i, 2);
+        FastLED.delay(5);
+      }
+      FastLED.delay(delayTime);
+      endLed = startLed - 10;
+      movementStart = endLed;
+      break;
+    case LUNGE:
+      position(startLed, 2);
+      FastLED.delay(delayTime);
+      for(byte i = 1; i < 40; i++) {
+        clear();
+        position(startLed + i, 2);
+        FastLED.delay(5);
+      }
+      FastLED.delay(delayTime);
+      endLed = startLed + 40;
+      movementStart = endLed;
+      break;
+    case LUNGE_ENEMY:
+      position(startLed, 2);
+      FastLED.delay(delayTime);
+      for(byte i = 1; i < 40; i++) {
+        clear();
+        position(startLed + i, 2);
+        FastLED.delay(5);
+      }
+      FastLED.delay(delayTime);
+      endLed = startLed + 40;
+      movementStart = endLed;
+      break;
+    case ADVANCE_LUNGE:
+      movementStart = endLed;
+      movementStart = endLed;
+      break;
+    case FLECHE:
+      endLed = startLed;
+      movementStart = endLed;
+      break;
+    default:
+      endLed = startLed;
+      movementStart = endLed;
+      break;
+  }
+
+  if ( movementStart < 0 ) { movementStart =  0; }
+  if ( movementStart > NUM_LEDS ) { movementStart =  NUM_LEDS; }
+}
+
+void setMode(){   
+  switch (keypad.getKey()) {
     case 'A':
       mode = SETUP;
       break;
@@ -82,29 +186,48 @@ void setMode(){
     case 'D':
       mode = SIMPLE_QUICK;
       break;
+    case '1':
+      mode = RANDOM_10P;
+      break;
+    case '2':
+      mode = RANDOM_20P;
+      break;
+    case '3':
+      mode = RANDOM_30P;
+      break;
+    case '4':
+      mode = RANDOM_40P;
+      break;
+    case '5':
+      mode = RANDOM_50P;
+      break;
+    case '6':
+      mode = RANDOM_60P;
+      break;
+    case '7':
+      mode = RANDOM_70P;
+      break;
+    case '8':
+      mode = RANDOM_80P;
+      break;
+    case '9':
+      mode = RANDOM_90P;
+      break;
+    case '0':
+      mode = RANDOM_100P;
+      break;
+    case '*':
+      mode = TRAINING_LOOP_3A_3R;
+      break;
+    case '#':
+      mode = TRAINING_LOOP_L_R;
+      break;
     default:
       break;
   }
 }
 
-void move (int moveType, int speed, int start) {
-  switch(moveType) {
-    case ADVANCE:
-      break;
-    case RETREAT:
-      break;
-    case LUNGE:
-      break;
-    case ADVANCE_LUNGE:
-      break;
-    case FLECHE:
-      break;
-    default:
-      break;
-  }
-}
-
-void setup() {
+void setup() {  
   delay(2000);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(255);
@@ -131,9 +254,9 @@ void loop() {
       clear();
       break;
     case SHUTTLE:
-      position(0, 2);         // end
-      position(NUM_LEDS/2, 2); // middle
-      position(NUM_LEDS, 2);   // start
+      position(0, 2);           // end
+      position(NUM_LEDS/2, 2);  // middle
+      position(NUM_LEDS, 2);    // start
       break;
     case SIMPLE_SLOW:
       for ( int i = 0; i < NUM_LEDS; i++ ) {
@@ -151,9 +274,67 @@ void loop() {
         clear();
       }
       break;
-    case RANDOM_SLOW:
+    case RANDOM_10P:
+      movement = random(0,4);
+      move(movement, 10, movementStart);
       break;
-    case RANDOM_QUICK:
+    case RANDOM_20P:
+      movement = random(0,4);
+      move(movement, 20, movementStart);
+      break;
+    case RANDOM_30P:
+      movement = random(0,4);
+      move(movement, 30, movementStart);
+      break;
+    case RANDOM_40P:
+      movement = random(0,4);
+      move(movement, 40, movementStart);
+      break;
+    case RANDOM_50P:
+      movement = random(0,4);
+      move(movement, 50, movementStart);
+      break;
+    case RANDOM_60P:
+      movement = random(0,4);
+      move(movement, 60, movementStart);
+      break;
+    case RANDOM_70P:
+      movement = random(0,4);
+      move(movement, 70, movementStart);
+      break;
+    case RANDOM_80P:
+      movement = random(0,4);
+      move(movement, 80, movementStart);
+      break;
+    case RANDOM_90P:
+      movement = random(0,4);
+      move(movement, 90, movementStart);
+      break;
+    case RANDOM_100P:
+      movement = random(0,4);
+      move(movement, 100, movementStart);
+      break;
+    case TRAINING_LOOP_3A_3R:
+      movementStart = NUM_LEDS/3;
+      move(ADVANCE, 50, movementStart);
+      setMode();
+      move(ADVANCE, 50, movementStart);
+      setMode();
+      move(ADVANCE, 50, movementStart);
+      setMode();
+      move(RETREAT, 50, movementStart);
+      setMode();
+      move(RETREAT, 50, movementStart);
+      setMode();
+      move(RETREAT, 50, movementStart);
+      setMode();
+      break;
+    case TRAINING_LOOP_L_R:
+      movementStart = NUM_LEDS/3;
+      move(LUNGE, 50, movementStart);
+      setMode();
+      move(RETREAT, 50, movementStart);
+      setMode();
       break;
     default:
       break;
