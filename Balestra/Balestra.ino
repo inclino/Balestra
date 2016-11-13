@@ -109,25 +109,25 @@ void move (int moveType, int speed, int startLed) {
     case ADVANCE:
       position(startLed, 2);
       FastLED.delay(delayTime);
-      for(byte i = 1; i < 10; i++) {
+      for(byte i = 1; i < 20; i++) {
         clear();
         position(startLed + i, 2);
         FastLED.delay(5);
       }
       FastLED.delay(delayTime);
-      endLed = startLed + 10;
+      endLed = startLed + 19;
       movementStart = endLed;
       break;
     case RETREAT:
       position(startLed, 2);
       FastLED.delay(delayTime);
-      for(byte i = 1; i < 10; i++) {
+      for(byte i = 1; i < 20; i++) {
         clear();
         position(startLed - i, 2);
         FastLED.delay(5);
       }
       FastLED.delay(delayTime);
-      endLed = startLed - 10;
+      endLed = startLed - 19;
       movementStart = endLed;
       break;
     case LUNGE:
@@ -139,7 +139,7 @@ void move (int moveType, int speed, int startLed) {
         FastLED.delay(5);
       }
       FastLED.delay(delayTime);
-      endLed = startLed + 40;
+      endLed = startLed + 39;
       movementStart = endLed;
       break;
     case LUNGE_ENEMY:
@@ -151,7 +151,7 @@ void move (int moveType, int speed, int startLed) {
         FastLED.delay(5);
       }
       FastLED.delay(delayTime);
-      endLed = startLed + 40;
+      endLed = startLed + 39;
       movementStart = endLed;
       break;
     case ADVANCE_LUNGE:
