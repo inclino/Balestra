@@ -1,5 +1,3 @@
-#include <FastLED.h>
-#include <Keypad.h>
 #include "Balestra.h"
 
 byte Balestra::getMode() { return mode; }
@@ -207,8 +205,8 @@ byte Balestra::getKey() {
   return keypad.getKey();
 }
 
-int Balestra::convertToLEDs ( float m, byte offset = 0 ) {
-  return m / NUM_LEDS_PER_METER + offset;
+int Balestra::convertToLEDs ( float m ) {
+  return m / NUM_LEDS_PER_METER;
 }
 
 void Balestra::pause ( int t ) {

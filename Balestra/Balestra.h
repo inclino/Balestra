@@ -54,7 +54,7 @@ class Balestra {
     byte getMovementSpeed ();
     void setMovementSpeed ( byte x );
     int getMovementStart ();
-    int convertToLEDs ( float m, byte offset = 0 )
+    int convertToLEDs ( float m );
     void setMovementStart ( int x );
     void position ( int x, int r );
     void clear ();

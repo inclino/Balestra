@@ -3,7 +3,9 @@
  *  Balestra: your virtual fencing training partner
  *  by Inclino
  */
-
+ 
+#include <FastLED.h>
+#include <Keypad.h>
 #include "Balestra.h"
 
 Balestra buddy;
@@ -20,9 +22,9 @@ void loop() {
 	  buddy.fill(CRGB::Blue);
       break;
     case SHUTTLE:
-	  buddy.position(buddy.convertToLEDs(0.10);
-	  buddy.position(buddy.convertToLEDs(2.00);
-	  buddy.position(buddy.convertToLEDs(3.80);
+	  buddy.position(buddy.convertToLEDs(0.10), 2);
+	  buddy.position(buddy.convertToLEDs(2.00), 2);
+	  buddy.position(buddy.convertToLEDs(3.80), 2);
       break;
     case RANDOM:
       buddy.setMovement(buddy.getRandomMovement());
@@ -50,3 +52,4 @@ void loop() {
       break;
   }
 }
+
