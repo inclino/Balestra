@@ -83,8 +83,8 @@ void position ( int x, int r ) {
 void move (int moveType, int speed, int startLed) {
   // Initialize ending led variable
   int endLed = startLed;
-  if ( startLed > (NUM_LEDS - 50) ) { moveType = RETREAT; }
-  if ( startLed < 50 ) { moveType = ADVANCE; }
+  if ( startLed > (NUM_LEDS - 30) ) { moveType = RETREAT; }
+  if ( startLed < 30 ) { moveType = ADVANCE; }
   
   // Set all leds to black
   clear();
