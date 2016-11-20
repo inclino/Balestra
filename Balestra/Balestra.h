@@ -44,19 +44,21 @@ class Balestra {
     byte colPins[KP_COLS] = KP_COL_PINS; //connect to the column pinouts of the keypad
     Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, KP_ROWS, KP_COLS );
 
-    void position ( int x, int r );
-    void clear ();
   public:
     Balestra ();
-    byte getKey();
-    byte getMode();
-    void setMode(byte x);
-    byte getMovement();
-    void setMovement(byte x);
-    byte getMovementSpeed();
-    void setMovementSpeed(byte x);
-    int getMovementStart();
-    void setMovementStart(int x);
+    byte getKey ();
+    byte getMode ();
+    void setMode ( byte x );
+    byte getMovement ();
+    void setMovement ( byte x );
+    byte getMovementSpeed ();
+    void setMovementSpeed ( byte x );
+    int getMovementStart ();
+    int convertToLEDs ( float m, byte offset = 0 )
+    void setMovementStart ( int x );
+    void position ( int x, int r );
+    void clear ();
+    void fill (const struct CRGB &color);
     byte getRandomMovement ();
     void move ();
 };

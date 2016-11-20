@@ -15,6 +15,11 @@ void Balestra::clear () {
   FastLED.show();
 }
 
+void Balestra::fill (const struct CRGB &color) {
+  fill_solid( &(leds[0]), NUM_LEDS, color );
+  FastLED.show();
+}
+
 void Balestra::position ( int x, int r ) {
   // Fix over- and underflow
   if ( x - r < -1 ) {
@@ -200,5 +205,9 @@ byte Balestra::getRandomMovement() {
 
 byte Balestra::getKey() {
   return keypad.getKey();
+}
+
+int Balestra::convertToLEDs ( float m, byte offset = 0 ) {
+  return m / NUM_LEDS_PER_METER + offset;
 }
 
