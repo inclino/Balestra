@@ -61,6 +61,7 @@ class Balestra {
     void fill (const struct CRGB &color);
     byte getRandomMovement ();
     void move ();
+    void pause (int t);
 };
 
 #endif

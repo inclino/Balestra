@@ -1,8 +1,7 @@
 
 /*
- * 
- * 
- * 
+ *  Balestra: your virtual fencing training partner
+ *  by Inclino
  */
 
 #include "Balestra.h"
@@ -26,10 +25,26 @@ void loop() {
 	  buddy.position(buddy.convertToLEDs(3.80);
       break;
     case RANDOM:
+      buddy.setMovement(buddy.getRandomMovement());
+      buddy.move();
       break;
     case TRAINING_LOOP_3A_3R:
+	  buddy.setMovementSpeed(20);
+	  for ( byte i = 0; i < 3; i++ ) {
+	    buddy.setMovement(ADVANCE);
+	    buddy.move();
+	  }
+	  for ( byte i = 0; i < 3; i++ ) {
+	    buddy.setMovement(RETREAT);
+	    buddy.move();
+	  }
       break;
     case TRAINING_LOOP_L_R:
+	  buddy.setMovementSpeed(20);
+      buddy.setMovement(LUNGE);
+      buddy.move();
+      buddy.setMovement(RETREAT);
+      buddy.move();
       break;
     default:
       break;

@@ -211,3 +211,7 @@ int Balestra::convertToLEDs ( float m, byte offset = 0 ) {
   return m / NUM_LEDS_PER_METER + offset;
 }
 
+void Balestra::pause ( int t ) {
+  FastLED.delay(t);
+}
+
